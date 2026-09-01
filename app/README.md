@@ -3,6 +3,7 @@
 A modern React + TypeScript dashboard for civic issue reporting, prioritization, and city-level intelligence.
 
 <p align="center">
+  <a href="https://civic-lens-platform.vercel.app"><img src="https://img.shields.io/badge/Live-Vercel-black?logo=vercel&logoColor=white" alt="Live on Vercel" /></a>
   <img src="https://img.shields.io/badge/Vite-5-646CFF?logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React" />
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
@@ -11,6 +12,8 @@ A modern React + TypeScript dashboard for civic issue reporting, prioritization,
 </p>
 
 ## What the app does
+
+**Try it live:** [civic-lens-platform.vercel.app](https://civic-lens-platform.vercel.app)
 
 The frontend is designed around a city reporting and response workflow:
 

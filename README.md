@@ -3,6 +3,7 @@
 A civic intelligence platform for reporting, prioritizing, and visualizing urban issues across a city.
 
 <p align="center">
+  <a href="https://civic-lens-platform.vercel.app"><img src="https://img.shields.io/badge/Live-Vercel-black?logo=vercel&logoColor=white" alt="Live on Vercel" /></a>
   <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React" />
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
@@ -14,6 +15,8 @@ A civic intelligence platform for reporting, prioritizing, and visualizing urban
 Civic Lens combines citizen issue reporting, mapping, dashboard analytics, and ML-based prioritization to help local authorities respond to civic problems faster and more intelligently.
 
 The project supports issue categories such as waste, potholes, streetlights, drainage, and water supply, then turns those reports into actionable priority signals, hotspot analysis, and municipal decision support.
+
+**🚀 [Live Demo](https://civic-lens-platform.vercel.app)** — Try the app now on Vercel
 
 ## Why this project exists
 
@@ -170,24 +173,29 @@ The project uses a hybrid-data style pipeline:
 
 ## Current status
 
-This repository is in a strong project-ready state with:
+**✅ Production Live** — Civic Lens is now deployed and fully operational:
 
-- a cleaned-up project structure
-- a verified frontend production build
-- a research-backed ML pipeline
-- updated app branding and documentation
+- live deployment on Vercel at [civic-lens-platform.vercel.app](https://civic-lens-platform.vercel.app)
+- Firebase authentication and Firestore integration working
+- cleaned-up project structure and consistent branding
+- verified frontend production build
+- research-backed ML pipeline
+- updated and polished documentation
 
 ## Roadmap
 
-- **[Ready]** step-by-step [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) for final repo rename and Vercel deployment
-- follow the deployment checklist to go live
+- **[✅ Complete]** GitHub repo renamed to `civic-lens` and Vercel deployment live
 - improve dashboard polish and analytics UX
-- add stronger deployment and CI workflows
+- add stronger deployment and CI workflows (GitHub Actions)
 - expand ML evaluation and reporting outputs
+- add custom domain and SSL/TLS configuration
+- enhance civic data analytics and reporting features
 
 ## License
 
-This project is currently structured for open development and portfolio use. Add a license file when you are ready to publish the repository publicly.
+MIT License — See [LICENSE](LICENSE) file for details.
+
+Built for civic visibility, smarter local action, and data-informed city management.
 
 ---
 
