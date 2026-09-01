@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { Report } from '@/types';
+import { Card, CardContent } from '@/components/ui/card';
 import { ReportList } from '@/components/ReportList';
 import { MapView } from '@/components/MapView';
 import {
