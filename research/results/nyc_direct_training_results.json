@@ -1,0 +1,302 @@
+{
+  "dataset": {
+    "records": 5469,
+    "label_source": "NYC 311 observed resolution outcome proxy",
+    "label_rule": {
+      "low": "resolved within 7 days, cancelled, or unresolved under 7 days",
+      "medium": "resolved/unresolved between 7 and 30 days",
+      "high": "resolved/unresolved after more than 30 days"
+    },
+    "label_distribution": {
+      "low": 3585,
+      "medium": 1384,
+      "high": 500
+    },
+    "category_distribution": {
+      "Drainage": 300,
+      "Pothole": 1500,
+      "Streetlight": 800,
+      "Waste": 1369,
+      "Water Supply": 1500
+    },
+    "status_distribution": {
+      "Completed": 3600,
+      "Pending": 1869
+    },
+    "data_source": "nyc_open_data"
+  },
+  "cv": {
+    "lr": {
+      "accuracy_mean": 0.9424024580553331,
+      "accuracy_std": 0.0041309768739104585,
+      "macro_f1_mean": 0.8795688766775657,
+      "macro_f1_std": 0.008339011920763828,
+      "fold_accuracies": [
+        0.9414990859232175,
+        0.9497257769652651,
+        0.9369287020109689,
+        0.9424131627056673,
+        0.9414455626715462
+      ]
+    },
+    "dt": {
+      "accuracy_mean": 0.9495337622998941,
+      "accuracy_std": 0.0027355768646895547,
+      "macro_f1_mean": 0.8936522627893865,
+      "macro_f1_std": 0.005523477869628321,
+      "fold_accuracies": [
+        0.9460694698354661,
+        0.9515539305301646,
+        0.946983546617916,
+        0.953382084095064,
+        0.94967978042086
+      ],
+      "p_val_vs_lr": 0.014307242340385263
+    },
+    "rf": {
+      "accuracy_mean": 0.9517277138379351,
+      "accuracy_std": 0.0021983698815178517,
+      "macro_f1_mean": 0.8971876843142095,
+      "macro_f1_std": 0.004824962045131872,
+      "fold_accuracies": [
+        0.9488117001828154,
+        0.9542961608775137,
+        0.9506398537477148,
+        0.9542961608775137,
+        0.9505946935041171
+      ],
+      "p_val_vs_lr": 0.004514267406438272
+    },
+    "xgb": {
+      "accuracy_mean": 0.9570298609566278,
+      "accuracy_std": 0.0023259626725307216,
+      "macro_f1_mean": 0.9033645206015267,
+      "macro_f1_std": 0.005362123313747775,
+      "fold_accuracies": [
+        0.9588665447897623,
+        0.9552102376599635,
+        0.9588665447897623,
+        0.9588665447897623,
+        0.9533394327538883
+      ],
+      "p_val_vs_lr": 0.006304100624702051
+    }
+  },
+  "paired_ttests": {
+    "dt": {
+      "t_statistic": 4.145948345790529,
+      "p_value": 0.014307242340385263
+    },
+    "rf": {
+      "t_statistic": 5.757390327952153,
+      "p_value": 0.004514267406438272
+    },
+    "xgb": {
+      "t_statistic": 5.248392050361002,
+      "p_value": 0.006304100624702051
+    }
+  },
+  "ablation": {
+    "Baseline (No Spatial)": {
+      "features": [
+        "category_encoded",
+        "status_encoded",
+        "category_frequency",
+        "is_pending"
+      ],
+      "accuracy_mean": 0.9424024580553331,
+      "accuracy_std": 0.0041309768739104585,
+      "macro_f1_mean": 0.8796483449677263,
+      "macro_f1_std": 0.008478843613495449
+    },
+    "+ Density": {
+      "features": [
+        "category_encoded",
+        "status_encoded",
+        "category_frequency",
+        "is_pending",
+        "density_score"
+      ],
+      "accuracy_mean": 0.9400256911608021,
+      "accuracy_std": 0.003299081943501718,
+      "macro_f1_mean": 0.8771582529759081,
+      "macro_f1_std": 0.007054146491893635
+    },
+    "+ Density + Coords": {
+      "features": [
+        "category_encoded",
+        "status_encoded",
+        "category_frequency",
+        "is_pending",
+        "density_score",
+        "Latitude",
+        "Longitude"
+      ],
+      "accuracy_mean": 0.9495337622998941,
+      "accuracy_std": 0.0027355768646895547,
+      "macro_f1_mean": 0.8936522627893865,
+      "macro_f1_std": 0.005523477869628321
+    }
+  },
+  "robustness": {
+    "All features": {
+      "features": [
+        "category_encoded",
+        "status_encoded",
+        "density_score",
+        "category_frequency",
+        "is_pending",
+        "Latitude",
+        "Longitude"
+      ],
+      "accuracy_mean": 0.9570298609566278,
+      "accuracy_std": 0.0023259626725307216,
+      "macro_f1_mean": 0.9033645206015267,
+      "macro_f1_std": 0.005362123313747775
+    },
+    "Without status": {
+      "features": [
+        "category_encoded",
+        "density_score",
+        "category_frequency",
+        "Latitude",
+        "Longitude"
+      ],
+      "accuracy_mean": 0.7985018507336867,
+      "accuracy_std": 0.007154905981956754,
+      "macro_f1_mean": 0.753798882336201,
+      "macro_f1_std": 0.00987901344411082
+    },
+    "Without density": {
+      "features": [
+        "category_encoded",
+        "status_encoded",
+        "category_frequency",
+        "is_pending",
+        "Latitude",
+        "Longitude"
+      ],
+      "accuracy_mean": 0.954470947746253,
+      "accuracy_std": 0.0025411809965951403,
+      "macro_f1_mean": 0.8985101643688329,
+      "macro_f1_std": 0.005729091010707908
+    }
+  },
+  "holdout": {
+    "lr": {
+      "accuracy": 0.9451553930530164,
+      "macro_f1": 0.8848883147269136,
+      "weighted_f1": 0.94760550137185,
+      "auc": 0.9899685977850042
+    },
+    "dt": {
+      "accuracy": 0.9488117001828154,
+      "macro_f1": 0.8935284304076546,
+      "weighted_f1": 0.9508610938497785,
+      "auc": 0.9841196035417447
+    },
+    "rf": {
+      "accuracy": 0.9524680073126143,
+      "macro_f1": 0.8987857157838478,
+      "weighted_f1": 0.9543745061832554,
+      "auc": 0.9903307065263335
+    },
+    "xgb": {
+      "accuracy": 0.9542961608775137,
+      "macro_f1": 0.8976392811065271,
+      "weighted_f1": 0.9552646529524694,
+      "auc": 0.9917803987775078
+    }
+  },
+  "per_class": {
+    "lr": {
+      "Low": {
+        "precision": 0.9958333333333333,
+        "recall": 1.0,
+        "f1": 0.9979123173277662,
+        "support": 717
+      },
+      "Medium": {
+        "precision": 1.0,
+        "recall": 0.7833935018050542,
+        "f1": 0.8785425101214575,
+        "support": 277
+      },
+      "High": {
+        "precision": 0.6369426751592356,
+        "recall": 1.0,
+        "f1": 0.7782101167315175,
+        "support": 100
+      }
+    },
+    "dt": {
+      "Low": {
+        "precision": 0.9958217270194986,
+        "recall": 0.99721059972106,
+        "f1": 0.9965156794425087,
+        "support": 717
+      },
+      "Medium": {
+        "precision": 0.986784140969163,
+        "recall": 0.8086642599277978,
+        "f1": 0.8888888888888888,
+        "support": 277
+      },
+      "High": {
+        "precision": 0.6644295302013423,
+        "recall": 0.99,
+        "f1": 0.7951807228915663,
+        "support": 100
+      }
+    },
+    "rf": {
+      "Low": {
+        "precision": 0.9958333333333333,
+        "recall": 1.0,
+        "f1": 0.9979123173277662,
+        "support": 717
+      },
+      "Medium": {
+        "precision": 0.9955947136563876,
+        "recall": 0.8158844765342961,
+        "f1": 0.8968253968253969,
+        "support": 277
+      },
+      "High": {
+        "precision": 0.673469387755102,
+        "recall": 0.99,
+        "f1": 0.8016194331983806,
+        "support": 100
+      }
+    },
+    "xgb": {
+      "Low": {
+        "precision": 0.99721059972106,
+        "recall": 0.99721059972106,
+        "f1": 0.99721059972106,
+        "support": 717
+      },
+      "Medium": {
+        "precision": 0.9382239382239382,
+        "recall": 0.8772563176895307,
+        "f1": 0.9067164179104478,
+        "support": 277
+      },
+      "High": {
+        "precision": 0.7288135593220338,
+        "recall": 0.86,
+        "f1": 0.7889908256880734,
+        "support": 100
+      }
+    }
+  },
+  "feature_importance_rf": {
+    "category_encoded": 0.17471558136686208,
+    "status_encoded": 0.27827387332094844,
+    "density_score": 0.012930304193416498,
+    "category_frequency": 0.22263705097019496,
+    "is_pending": 0.2569994288966655,
+    "Latitude": 0.027912381344615444,
+    "Longitude": 0.026531379907297047
+  }
+}

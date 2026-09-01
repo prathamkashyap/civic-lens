@@ -1,0 +1,89 @@
+
+<style>
+  .section { margin-bottom: 2rem; }
+  .score-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-bottom: 1.5rem; }
+  .score-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.9rem 1rem; text-align: center; }
+  .score-label { font-size: 12px; color: var(--color-text-secondary); margin: 0 0 4px; }
+  .score-val { font-size: 22px; font-weight: 500; margin: 0; }
+  .good { color: #0F6E56; } .ok { color: #BA7517; } .warn { color: #A32D2D; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin: 2px; }
+  .tag-green { background: #EAF3DE; color: #3B6D11; }
+  .tag-amber { background: #FAEEDA; color: #854F0B; }
+  .tag-red { background: #FCEBEB; color: #A32D2D; }
+  .issue-row { border-left: 3px solid; padding: 8px 12px; margin: 8px 0; border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0; background: var(--color-background-secondary); font-size: 14px; }
+  .issue-row.green { border-color: #1D9E75; }
+  .issue-row.amber { border-color: #EF9F27; }
+  .issue-row.red { border-color: #E24B4A; }
+  .section-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin: 0 0 0.75rem; }
+  .bar-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 13px; }
+  .bar-label { width: 140px; color: var(--color-text-secondary); flex-shrink: 0; }
+  .bar-track { flex: 1; background: var(--color-background-secondary); border-radius: 4px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 8px; border-radius: 4px; }
+  .bar-score { width: 32px; text-align: right; font-weight: 500; color: var(--color-text-primary); }
+  .divider { border: none; border-top: 0.5px solid var(--color-border-tertiary); margin: 1.5rem 0; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+</style>
+
+<h2 class="sr-only">Paper review dashboard for spatially-aware civic issue prioritization paper</h2>
+
+<div style="padding: 1rem 0;">
+
+<div class="section">
+  <p class="section-title">Overall scores</p>
+  <div class="score-grid">
+    <div class="score-card"><p class="score-label">Overall</p><p class="score-val ok">7.1<span style="font-size:14px;color:var(--color-text-secondary)">/10</span></p></div>
+    <div class="score-card"><p class="score-label">Writing</p><p class="score-val good">8<span style="font-size:14px;color:var(--color-text-secondary)">/10</span></p></div>
+    <div class="score-card"><p class="score-label">Methodology</p><p class="score-val ok">7.5<span style="font-size:14px;color:var(--color-text-secondary)">/10</span></p></div>
+    <div class="score-card"><p class="score-label">Novelty</p><p class="score-val warn">5.5<span style="font-size:14px;color:var(--color-text-secondary)">/10</span></p></div>
+    <div class="score-card"><p class="score-label">Results rigor</p><p class="score-val ok">7<span style="font-size:14px;color:var(--color-text-secondary)">/10</span></p></div>
+    <div class="score-card"><p class="score-label">References</p><p class="score-val good">8<span style="font-size:14px;color:var(--color-text-secondary)">/10</span></p></div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <p class="section-title">Plagiarism risk indicators</p>
+  <div class="issue-row green">No direct text copying detected — writing appears original throughout.</div>
+  <div class="issue-row amber"><strong>Generic phrasing risk:</strong> "Rapid urbanization has led to a significant increase in civic complaints…" — this exact sentence structure appears in dozens of smart-city papers. Rephrase with your own angle.</div>
+  <div class="issue-row amber"><strong>Formulaic related-work pattern:</strong> Sections II-A through II-D each follow "Author [X] does Y" format almost identically. This is low-risk for plagiarism but may trigger similarity flags in tools like iThenticate due to predictable sentence structure.</div>
+  <div class="issue-row green">Equations, tables, and results are original and internally consistent — no lifted content.</div>
+  <div class="issue-row green">All claims are properly attributed. 19 references are appropriate for a 6-page IEEE paper.</div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <p class="section-title">Spelling & grammar check</p>
+  <div class="issue-row green">No spelling errors found in the main text.</div>
+  <div class="issue-row amber"><strong>Page 3, Table I caption:</strong> Missing period at end of caption sentence — minor but inconsistent with other captions.</div>
+  <div class="issue-row amber"><strong>Page 4, Section IV-B:</strong> "exhibits higher variance (±0.046 vs. ±0.012), suggesting instability in capturing…" — grammatically fine but "instability" is too strong; "greater sensitivity" is more accurate.</div>
+  <div class="issue-row amber"><strong>Table V:</strong> Clusters 2, 3, 4 show "–" in Pending% column — this looks like missing data. Either fill the values or add a footnote explaining why they're omitted.</div>
+  <div class="issue-row red"><strong>Equation label mismatch:</strong> Equation (2) uses variable <em>r = 0.003°</em> but the text in Section III-F says ε = 0.002° for DBSCAN — these are different parameters but the notation overlaps with DBSCAN's epsilon symbol used in other spatial ML papers. Clarify notation distinctly.</div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <p class="section-title">Technical & content issues</p>
+  <div class="issue-row red"><strong>Critical — synthetic data only:</strong> The entire evaluation uses a self-generated 1,600-record dataset. No real-world validation means reviewers at most venues will reject on generalizability grounds. This must be addressed.</div>
+  <div class="issue-row red"><strong>Arbitrary scoring weights:</strong> The label function uses weights 0.4, 0.3, 0.3 with no justification or sensitivity analysis. If these weights change even slightly, priority labels — and therefore all results — shift substantially.</div>
+  <div class="issue-row amber"><strong>Weak baseline selection:</strong> Only two models are compared (Decision Tree vs Logistic Regression). Not including Random Forest, XGBoost, or even k-NN means the result that "tree-based > linear" is unsurprising and understated.</div>
+  <div class="issue-row amber"><strong>Ablation trade-off not discussed:</strong> Table IV shows High Recall drops from 0.88 → 0.83 when density is added. This regression is never mentioned in the discussion — it should be addressed honestly.</div>
+  <div class="issue-row amber"><strong>No statistical significance test:</strong> Cross-validation results are reported as mean ± std but no t-test or Wilcoxon test confirms the decision tree's improvement over logistic regression is statistically significant.</div>
+  <div class="issue-row amber"><strong>School affiliation inconsistency:</strong> Dr. Kesarwany is listed under SASL (Applied Sciences & Language), but this seems inconsistent for a computing paper. Verify the affiliation is correct for submission.</div>
+  <div class="issue-row green">Circular dependency concern is acknowledged and addressed well in Section III-C.</div>
+  <div class="issue-row green">Ablation study design is methodologically sound and adds real value to the paper.</div>
+</div>
+
+<hr class="divider">
+
+<div class="section">
+  <p class="section-title">Venue suitability estimate</p>
+  <div class="bar-row"><span class="bar-label">Tier-1 journal (TKDE, TITS)</span><div class="bar-track"><div class="bar-fill" style="width:18%;background:#E24B4A;"></div></div><span class="bar-score warn">Low</span></div>
+  <div class="bar-row"><span class="bar-label">Tier-2 conference (ICDCS, CIKM)</span><div class="bar-track"><div class="bar-fill" style="width:42%;background:#EF9F27;"></div></div><span class="bar-score ok">Med</span></div>
+  <div class="bar-row"><span class="bar-label">Workshop / regional conf.</span><div class="bar-track"><div class="bar-fill" style="width:78%;background:#1D9E75;"></div></div><span class="bar-score good">High</span></div>
+  <div class="bar-row"><span class="bar-label">EPICS / student symposium</span><div class="bar-track"><div class="bar-fill" style="width:93%;background:#1D9E75;"></div></div><span class="bar-score good">Very high</span></div>
+</div>
+
+</div>

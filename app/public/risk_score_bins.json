@@ -1,0 +1,18 @@
+[
+  {
+    "bin": "Very Low",
+    "count": 0
+  },
+  {
+    "bin": "Low",
+    "count": 587
+  },
+  {
+    "bin": "Medium",
+    "count": 815
+  },
+  {
+    "bin": "High",
+    "count": 198
+  }
+]

@@ -1,0 +1,60 @@
+# macOS
+.DS_Store
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.vite/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# LaTeX build outputs
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.run.xml
+*.synctex.gz
+
+# Local generated artifacts
+*.tmp
+*.bak
+
+# Private academic / submission material
+docs/phase-2/signatures/
+docs/phase-2/submitted-reports/individual-reports/
+docs/phase-2/plagiarism/
+archive/final-editing-drafts/
+archive/migration-backups/
+archive/root-ipynb-checkpoints/
+
+# Legacy project backups
+archive/legacy-civiq-backup/
+archive/legacy-ml-workspace/
+
+# Research drafts and generated review artifacts
+archive/research-paper-initial/
+.vscode/
+app/public/HeatMap.ipynb
+
+# Academic submission artifacts
+docs/phase-2/combined-individual-report/
+docs/phase-2/submitted-reports/

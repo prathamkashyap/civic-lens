@@ -1,0 +1,54 @@
+[
+  {
+    "name": "Baseline (No Spatial)",
+    "features": [
+      "category_encoded",
+      "status_encoded",
+      "category_frequency",
+      "is_pending"
+    ],
+    "accuracy_mean": 0.7293750000000001,
+    "accuracy_std": 0.021341713848704834,
+    "f1_mean": 0.710261024983408,
+    "f1_std": 0.019290437401737092,
+    "high_recall": 0.875,
+    "holdout_accuracy": 0.721875,
+    "holdout_macro_f1": 0.7049845144092702
+  },
+  {
+    "name": "With Density",
+    "features": [
+      "category_encoded",
+      "status_encoded",
+      "density_score",
+      "category_frequency",
+      "is_pending"
+    ],
+    "accuracy_mean": 0.8575000000000002,
+    "accuracy_std": 0.02489038468967486,
+    "f1_mean": 0.8246745149990529,
+    "f1_std": 0.036513402645768106,
+    "high_recall": 0.825,
+    "holdout_accuracy": 0.846875,
+    "holdout_macro_f1": 0.8209932144358373
+  },
+  {
+    "name": "Full Features (Density + Coordinates)",
+    "features": [
+      "category_encoded",
+      "status_encoded",
+      "density_score",
+      "category_frequency",
+      "is_pending",
+      "Latitude",
+      "Longitude"
+    ],
+    "accuracy_mean": 0.8737499999999999,
+    "accuracy_std": 0.011625672023586432,
+    "f1_mean": 0.8437558013772097,
+    "f1_std": 0.016458483394416662,
+    "high_recall": 0.825,
+    "holdout_accuracy": 0.84375,
+    "holdout_macro_f1": 0.8151996711545225
+  }
+]

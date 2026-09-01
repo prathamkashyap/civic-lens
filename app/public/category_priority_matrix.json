@@ -1,0 +1,41 @@
+{
+  "categories": [
+    "Drainage",
+    "Pothole",
+    "Streetlight",
+    "Waste",
+    "Water Supply"
+  ],
+  "priorities": [
+    "HIGH",
+    "LOW",
+    "MEDIUM"
+  ],
+  "matrix": [
+    [
+      60,
+      47,
+      116
+    ],
+    [
+      67,
+      123,
+      232
+    ],
+    [
+      6,
+      184,
+      129
+    ],
+    [
+      8,
+      230,
+      240
+    ],
+    [
+      57,
+      3,
+      98
+    ]
+  ]
+}
