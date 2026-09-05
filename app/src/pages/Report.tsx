@@ -1,28 +1,26 @@
 
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
 import { ReportForm } from '@/components/ReportForm';
+import MainLayout from '@/layouts/MainLayout';
 
 const Report = () => {
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-      
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold">Report an Issue</h1>
-          <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+    <MainLayout>
+      <main className="mx-auto max-w-5xl">
+        <div className="mb-8 max-w-2xl">
+          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+            Community reporting
+          </p>
+          <h1 className="text-4xl font-bold tracking-tight">Report an issue</h1>
+          <p className="mt-3 text-muted-foreground">
             Help improve your community by reporting waste, pothole, streetlight, drainage, or water supply issues.
           </p>
         </div>
-        
-        <div className="max-w-3xl mx-auto">
+
+        <div className="max-w-3xl">
           <ReportForm />
         </div>
       </main>
-      
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

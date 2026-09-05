@@ -29,11 +29,7 @@ export default function Login() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden"
-      style={{
-        background: `radial-gradient(circle at top left, #a8edea, #fed6e3),
-                     radial-gradient(circle at bottom right, #f9f586, #a1c4fd)`,
-      }}
+      className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4"
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
         <svg
@@ -53,23 +49,23 @@ export default function Login() {
         </svg>
       </div>
 
-      <div className="relative p-10 rounded-lg shadow-xl bg-white bg-opacity-90 backdrop-blur-md w-full max-w-md flex flex-col items-center gap-6">
+      <div className="relative flex w-full max-w-md flex-col items-center gap-6 rounded-2xl border border-border/70 bg-card/85 p-10 shadow-xl backdrop-blur-md">
         <div className="absolute top-6 left-6 flex items-center gap-2">
-          <div className="w-10 h-10 bg-urban-primary rounded-full flex items-center justify-center text-white font-bold text-lg select-none">
-            CQ
+          <div className="urban-gradient flex h-10 w-10 items-center justify-center rounded-xl text-lg font-bold text-white select-none">
+            CL
           </div>
-          <span className="font-bold text-lg text-gray-900 select-none">Civic Lens</span>
+          <span className="text-lg font-bold text-foreground select-none">Civic Lens</span>
         </div>
 
         <Lottie animationData={loginAnimation} loop style={{ width: 150, height: 150 }} />
 
-        <h2 className="text-xl font-semibold text-center text-gray-900">
+        <h2 className="text-center text-xl font-semibold text-foreground">
           Continue with Google
         </h2>
 
         <button
           onClick={handleFirebaseLogin}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md"
+          className="h-11 rounded-md px-6"
         >
           Continue with Google
         </button>

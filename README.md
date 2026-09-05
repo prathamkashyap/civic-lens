@@ -2,8 +2,11 @@
 
 A civic intelligence platform for reporting, prioritizing, and visualizing urban issues across a city.
 
+<p align="center"><img src="docs/civic-lens-mark.svg" width="96" alt="Civic Lens mark" /></p>
+
 <p align="center">
   <a href="https://civic-lens-platform.vercel.app"><img src="https://img.shields.io/badge/Live-Vercel-black?logo=vercel&logoColor=white" alt="Live on Vercel" /></a>
+  <a href="https://github.com/prathamkashyap/civic-lens/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/prathamkashyap/civic-lens/ci.yml?branch=main&label=CI" alt="CI status" /></a>
   <img src="https://img.shields.io/badge/React-18-61DAFB?logo=react&logoColor=white" alt="React" />
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Firebase-Auth%20%2B%20Firestore-FFCA28?logo=firebase&logoColor=black" alt="Firebase" />
@@ -53,6 +56,11 @@ Hotspot Detection + Risk Scoring
     ↓
 Dashboard / Map / Insights UI
 ```
+
+  The detailed system boundary and data flow are documented in
+  [ARCHITECTURE.md](ARCHITECTURE.md).
+
+  ![Civic Lens architecture and application flow](docs/phase-1/reports/diagrams-and-flowcharts/Architectural%20and%20Application%20Flow.svg)
 
 ## Tech stack
 
@@ -167,6 +175,9 @@ The project uses a hybrid-data style pipeline:
 
 - [app/README.md](app/README.md) — frontend project guide
 - [ml/README.md](ml/README.md) — ML pipeline documentation
+- [ARCHITECTURE.md](ARCHITECTURE.md) — application and analytics architecture
+- [DECISIONS.md](DECISIONS.md) — architecture decision records
+- [CONTRIBUTING.md](CONTRIBUTING.md) — setup, checks, and contribution workflow
 - [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) — step-by-step repo rename and Vercel deployment guide
 - [docs/](docs/) — project notes, reports, and submission artifacts
 - [research/](research/) — research experiments and paper materials
@@ -326,30 +337,6 @@ two-column paper remains untouched.
 - Add regional density normalization for cross-city transfer.
 
 ---
-
-## GitHub Upload Checklist
-
-1. Remove or ignore local-only folders such as `node_modules/`, `dist/`,
-   `.DS_Store`, and `.env`.
-2. Initialize Git at the repository root:
-
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial structured EPICS Civic Lens project"
-   ```
-
-3. Create a new empty GitHub repository.
-4. Connect the local repository:
-
-   ```bash
-   git branch -M main
-   git remote add origin https://github.com/<username>/<repo-name>.git
-   git push -u origin main
-   ```
-
-5. Add Firebase secrets as local `.env` values or platform environment variables,
-   not as committed files.
 
 ---
 

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,44 +6,44 @@
 
 @layer base {
   :root {
-  --background: 210 40% 95%;
-  --foreground: 222 30% 20%;
+  --background: 210 33% 97%;
+  --foreground: 222 35% 14%;
 
-  --card: 0 0% 98%;
-  --card-foreground: 222 30% 20%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 35% 14%;
 
-  --popover: 0 0% 98%;
-  --popover-foreground: 222 30% 20%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 35% 14%;
 
-  --primary: 262 82% 58%;
+  --primary: 201 90% 38%;
   --primary-foreground: 0 0% 99%;
 
-  --secondary: 241 78% 59%;
+  --secondary: 189 75% 38%;
   --secondary-foreground: 0 0% 99%;
 
-  --muted: 210 20% 92%;
-  --muted-foreground: 215 14% 47%;
+  --muted: 210 24% 93%;
+  --muted-foreground: 215 16% 42%;
 
-  --accent: 194 90% 48%;
+  --accent: 40 92% 54%;
   --accent-foreground: 0 0% 99%;
 
   --destructive: 0 83% 60%;
   --destructive-foreground: 0 0% 99%;
 
-  --border: 210 20% 85%;
-  --input: 210 20% 85%;
-  --ring: 262 82% 58%;
+  --border: 210 22% 86%;
+  --input: 210 22% 82%;
+  --ring: 201 90% 38%;
 
   --radius: 0.75rem;
 
   --sidebar-background: 210 40% 94%;
   --sidebar-foreground: 222 30% 20%;
-  --sidebar-primary: 262 82% 58%;
+  --sidebar-primary: 201 90% 38%;
   --sidebar-primary-foreground: 0 0% 99%;
   --sidebar-accent: 210 33% 92%;
   --sidebar-accent-foreground: 222 30% 20%;
   --sidebar-border: 210 20% 85%;
-  --sidebar-ring: 262 82% 58%;
+  --sidebar-ring: 201 90% 38%;
 }
 
 
@@ -57,16 +57,16 @@
   --popover: 215 60% 12%;
   --popover-foreground: 210 60% 96%;
 
-  --primary: 220 77% 50%;       /* #2563eb */
+  --primary: 199 89% 48%;       /* civic blue */
   --primary-foreground: 210 60% 98%;
 
-  --secondary: 220 60% 40%;
+  --secondary: 189 70% 45%;
   --secondary-foreground: 210 60% 96%;
 
   --muted: 215 30% 20%;
   --muted-foreground: 215 18% 70%;
 
-  --accent: 220 77% 34%;        /* #1e3a8a */
+  --accent: 40 92% 54%;
   --accent-foreground: 210 60% 96%;
 
   --destructive: 0 91% 71%;
@@ -74,16 +74,16 @@
 
   --border: 215 30% 20%;
   --input: 215 30% 20%;
-  --ring: 220 80% 60%;
+  --ring: 199 89% 58%;
 
   --sidebar-background: 215 60% 12%;
   --sidebar-foreground: 210 60% 96%;
-  --sidebar-primary: 220 80% 60%;
+  --sidebar-primary: 199 89% 58%;
   --sidebar-primary-foreground: 210 60% 96%;
   --sidebar-accent: 215 30% 20%;
   --sidebar-accent-foreground: 210 60% 96%;
   --sidebar-border: 215 30% 20%;
-  --sidebar-ring: 220 80% 60%;
+  --sidebar-ring: 199 89% 58%;
 }
 }
 
@@ -93,26 +93,32 @@
   }
 
   body {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.75rem; /* ~12pt */
-    background: linear-gradient(to bottom, #f3f4f6, #e5e7eb);
-    @apply text-foreground transition-colors duration-300 dark:bg-none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    background: hsl(var(--background));
+    @apply text-foreground transition-colors duration-300;
   }
 
   .dark body {
-    background: linear-gradient(to bottom, #0b1f40, #162d55); /* navy gradient for dark mode */
+    background: hsl(var(--background));
   }
 
   html {
     @apply scroll-smooth;
   }
 
-  h1, h2 {
-    font-family: 'Caveat', cursive;
+  :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 3px;
   }
 
   h3, h4, h5, h6 {
     @apply font-semibold;
+  }
+
+  h1, h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    letter-spacing: -0.02em;
   }
 
   h1 {
@@ -130,11 +136,11 @@
 
 @layer components {
   .urban-gradient {
-    @apply bg-gradient-to-r from-urban-primary to-urban-secondary;
+    @apply bg-gradient-to-r from-primary to-secondary;
   }
 
   .glass-card {
-    @apply bg-white/90 dark:bg-black/60 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg;
+    @apply bg-card/80 backdrop-blur-md border border-border/60 shadow-sm;
   }
 
   .status-pending {
@@ -150,7 +156,7 @@
   }
 
   .font-handwritten {
-    font-family: 'Caveat', cursive;
+    font-family: 'Space Grotesk', sans-serif;
   }
 
   .shining {
@@ -212,4 +218,53 @@
 .leaflet-container {
   height: 100%;
   width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .route-transition-animation {
+    display: none;
+  }
+}
+
+.civic-map-marker {
+  background: transparent;
+  border: 0;
+}
+
+.civic-map-marker__dot {
+  display: block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid hsl(var(--background));
+  border-radius: 9999px;
+  box-shadow: 0 3px 10px rgb(15 23 42 / 0.28);
+}
+
+.civic-map-marker__dot--high {
+  background: #ef4444;
+  box-shadow: 0 0 0 5px rgb(239 68 68 / 0.2), 0 3px 10px rgb(15 23 42 / 0.28);
+}
+
+.civic-map-marker__dot--medium {
+  background: #f59e0b;
+}
+
+.civic-map-marker__dot--low {
+  background: #0ea5e9;
+}
+
+.civic-map-marker__dot--resolved {
+  background: #10b981;
 }

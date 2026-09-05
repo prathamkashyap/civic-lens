@@ -10,8 +10,7 @@ import {
   Loader,
   XCircle,
 } from 'lucide-react';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import MainLayout from '@/layouts/MainLayout';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -99,9 +98,9 @@ const ReportDetail = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'Pending':
-        return <Clock className="h-5 w-5 text-urban-warning" />;
+        return <Clock className="h-5 w-5 text-amber-500" />;
       case 'Completed':
-        return <CheckCircle className="h-5 w-5 text-urban-success" />;
+        return <CheckCircle className="h-5 w-5 text-emerald-500" />;
       case 'Cancelled':
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
@@ -116,17 +115,15 @@ const ReportDetail = () => {
       case 'Completed':
         return 'status-completed';
       case 'Cancelled':
-        return 'bg-red-600 text-white';
+        return 'bg-destructive/10 text-destructive border border-destructive/20';
       default:
         return '';
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-
-      <main className="flex-grow container mx-auto px-4 py-8">
+    <MainLayout>
+      <main className="mx-auto max-w-6xl">
         <Button
           variant="ghost"
           className="mb-6"
@@ -139,12 +136,12 @@ const ReportDetail = () => {
         {loading ? (
           <div className="flex items-center justify-center py-24">
             <div className="flex flex-col items-center">
-              <Loader className="h-8 w-8 animate-spin text-urban-primary mb-4" />
+              <Loader className="mb-4 h-8 w-8 animate-spin text-primary" />
               <p className="text-muted-foreground">Loading report details...</p>
             </div>
           </div>
         ) : report ? (
-          <div className="max-w-4xl mx-auto">
+          <div className="mx-auto max-w-5xl">
             <div className="flex flex-col md:flex-row gap-6 mb-8">
               <div className="w-full md:w-1/2">
                 <Card className="overflow-hidden">
@@ -152,6 +149,7 @@ const ReportDetail = () => {
                     <img
                       src={report.photo || '/placeholder.svg'}
                       alt={`${report.category} issue`}
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -172,7 +170,7 @@ const ReportDetail = () => {
                   </div>
                 </div>
 
-                <Card className="p-4 space-y-4 mb-6">
+                <Card className="mb-6 space-y-4 border-border/70 bg-card/75 p-5 shadow-sm">
                   <div className="flex items-center gap-3">
                     <Calendar className="h-5 w-5 text-muted-foreground" />
                     <div>
@@ -237,8 +235,8 @@ const ReportDetail = () => {
 
             <div className="space-y-6">
               <div>
-                <h3 className="text-xl font-medium mb-2">Description</h3>
-                <Card className="p-4">
+                <h3 className="mb-2 text-xl font-semibold">Description</h3>
+                <Card className="border-border/70 bg-card/75 p-5 shadow-sm">
                   <p className="text-muted-foreground">
                     {report.description || 'No description provided.'}
                   </p>
@@ -246,8 +244,8 @@ const ReportDetail = () => {
               </div>
 
               <div>
-                <h3 className="text-xl font-medium mb-2">Status Updates</h3>
-                <Card className="divide-y divide-border">
+                <h3 className="mb-2 text-xl font-semibold">Status updates</h3>
+                <Card className="divide-y divide-border border-border/70 bg-card/75 shadow-sm">
                   <StatusUpdate
                     status="Submitted"
                     date={report.timestamp}
@@ -283,9 +281,7 @@ const ReportDetail = () => {
           </div>
         )}
       </main>
-
-      <Footer />
-    </div>
+    </MainLayout>
   );
 };
 

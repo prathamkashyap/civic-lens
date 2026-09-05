@@ -94,6 +94,15 @@ export function ReportCard({ report, viewMode = 'full', onClick }: ReportCardPro
     <Card
       className={`overflow-hidden transition-all duration-300 ${onClick ? 'cursor-pointer hover:shadow-md' : ''}`}
       onClick={onClick}
+      onKeyDown={(event) => {
+        if (onClick && (event.key === 'Enter' || event.key === ' ')) {
+          event.preventDefault();
+          onClick();
+        }
+      }}
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={onClick ? `Open ${report.category} report` : undefined}
     >
       <div className="flex flex-col sm:flex-row">
         {viewMode === 'full' && (
@@ -101,6 +110,7 @@ export function ReportCard({ report, viewMode = 'full', onClick }: ReportCardPro
             <img
               src={report.photo || '/placeholder.svg'}
               alt={`${report.category} issue`}
+              loading="lazy"
               className="h-full w-full object-cover"
             />
             <div className="absolute left-2 top-2">{getStatusBadge(report.status)}</div>

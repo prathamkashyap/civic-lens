@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import {
-  ChevronDown,
-  ChevronUp,
   XCircle,
   CheckCircle,
   Clock,
@@ -9,6 +7,7 @@ import {
 import { format } from 'date-fns';
 import { Report } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { ReportList } from '@/components/ReportList';
 import { MapView } from '@/components/MapView';
 import {
@@ -90,40 +89,36 @@ export function AdminDashboard({ reports }: AdminDashboardProps) {
           📥 DOWNLOAD CSV BUTTON (INSERTED HERE)
       ---------------------------------------------------- */}
       <div className="flex justify-end">
-        <button
+        <Button
           onClick={downloadCSV}
-          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md shadow-md"
+          variant="outline"
         >
           Download CSV
-        </button>
+        </Button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Total Reports"
           value={totalReports}
-          trend={{ value: 12, direction: 'up' }}
         />
         <StatCard
           title="Pending"
           value={pendingReports}
-          iconColor="text-urban-warning"
+          iconColor="text-amber-500"
           icon={<Clock className="h-4 w-4" />}
-          trend={{ value: 5, direction: 'up' }}
         />
         <StatCard
           title="Completed"
           value={completedReports}
-          iconColor="text-urban-info"
+          iconColor="text-primary"
           icon={<CheckCircle className="h-4 w-4" />}
-          trend={{ value: 8, direction: 'up' }}
         />
         <StatCard
           title="Cancelled"
           value={cancelledReports}
-          iconColor="text-urban-success"
+          iconColor="text-emerald-500"
           icon={<XCircle className="h-4 w-4" />}
-          trend={{ value: 3, direction: 'up' }}
         />
       </div>
 
@@ -175,13 +170,9 @@ interface StatCardProps {
   value: number;
   iconColor?: string;
   icon?: React.ReactNode;
-  trend?: {
-    value: number;
-    direction: 'up' | 'down';
-  };
 }
 
-function StatCard({ title, value, iconColor, icon, trend }: StatCardProps) {
+function StatCard({ title, value, iconColor, icon }: StatCardProps) {
   return (
     <Card>
       <CardContent className="p-6">
@@ -196,19 +187,6 @@ function StatCard({ title, value, iconColor, icon, trend }: StatCardProps) {
             </div>
           )}
         </div>
-        {trend && (
-          <div className="mt-4 flex items-center text-xs">
-            {trend.direction === 'up' ? (
-              <ChevronUp className="h-3 w-3 text-urban-success mr-1" />
-            ) : (
-              <ChevronDown className="h-3 w-3 text-urban-danger mr-1" />
-            )}
-            <span className={trend.direction === 'up' ? 'text-urban-success' : 'text-urban-danger'}>
-              {trend.value}%
-            </span>
-            <span className="text-muted-foreground ml-1">from last month</span>
-          </div>
-        )}
       </CardContent>
     </Card>
   );

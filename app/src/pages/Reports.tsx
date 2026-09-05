@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { ArrowRight, ClipboardList, CircleCheck, Clock3, Plus } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ReportList } from '@/components/ReportList';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
+import MainLayout from '@/layouts/MainLayout';
+import { Button } from '@/components/ui/button';
 import { PriorityLevel, Report, ReportCategory, ReportStatus } from '@/types';
 import { collection, onSnapshot, query, where } from 'firebase/firestore';
 import { db } from '@/firebaseConfig';
@@ -100,24 +102,45 @@ const Reports = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
+    <MainLayout>
+      <div className="mx-auto max-w-6xl space-y-8">
+        <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+          <div>
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+              Community activity
+            </p>
+            <h1 className="text-4xl font-bold tracking-tight">My reports</h1>
+            <p className="mt-3 max-w-2xl text-muted-foreground">
+              Follow every issue you have submitted, from the first location pin to resolution.
+            </p>
+          </div>
+          <Button asChild className="w-full sm:w-auto">
+            <Link to="/report">
+              <Plus className="mr-2 h-4 w-4" />
+              Report an issue
+            </Link>
+          </Button>
+        </div>
 
-      <main className="flex-grow container mx-auto px-4 py-8">
-        <div className="max-w-6xl mx-auto">
-          <h1 className="text-3xl font-bold mb-6">My Reports</h1>
+        <div className="grid gap-4 sm:grid-cols-3">
+          <ReportSummary icon={ClipboardList} label="All reports" value={reports.all.length} />
+          <ReportSummary icon={Clock3} label="Awaiting action" value={reports.pending.length} tone="warning" />
+          <ReportSummary icon={CircleCheck} label="Resolved" value={reports.completed.length} tone="success" />
+        </div>
 
-          {loading ? (
-            <p className="text-center">Loading reports...</p>
-          ) : (
+        {loading ? (
+          <div className="flex min-h-64 items-center justify-center rounded-2xl border border-border/70 bg-card/70">
+            <p className="text-muted-foreground">Loading your reports...</p>
+          </div>
+        ) : (
             <Tabs
               value={activeTab}
               onValueChange={setActiveTab}
               defaultValue="all"
               className="space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <TabsList>
+              <div className="flex flex-col gap-4 border-b border-border/70 pb-4 sm:flex-row sm:items-center sm:justify-between">
+                <TabsList className="w-full justify-start overflow-x-auto sm:w-auto">
                   <TabsTrigger value="all">
                     All Reports
                     <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-xs">
@@ -143,6 +166,11 @@ const Reports = () => {
                     </span>
                   </TabsTrigger>
                 </TabsList>
+                <p className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <span>{reports.all.length} total</span>
+                  <ArrowRight className="h-4 w-4" />
+                  <span>Sorted by priority</span>
+                </p>
               </div>
 
               <TabsContent value="all">
@@ -161,13 +189,38 @@ const Reports = () => {
                 <ReportList reports={reports.cancelled} />
               </TabsContent>
             </Tabs>
-          )}
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+            )}
+      </div>
+    </MainLayout>
   );
 };
+
+function ReportSummary({
+  icon: Icon,
+  label,
+  value,
+  tone = 'default',
+}: {
+  icon: typeof ClipboardList;
+  label: string;
+  value: number;
+  tone?: 'default' | 'warning' | 'success';
+}) {
+  const toneClass = tone === 'warning'
+    ? 'text-amber-500 dark:text-amber-400'
+    : tone === 'success'
+      ? 'text-emerald-600 dark:text-emerald-400'
+      : 'text-primary';
+
+  return (
+    <div className="rounded-2xl border border-border/70 bg-card/75 p-5 shadow-sm backdrop-blur-xl">
+      <div className="flex items-center justify-between">
+        <p className="text-sm text-muted-foreground">{label}</p>
+        <Icon className={`h-4 w-4 ${toneClass}`} />
+      </div>
+      <p className={`mt-3 text-3xl font-bold ${toneClass}`}>{value}</p>
+    </div>
+  );
+}
 
 export default Reports;

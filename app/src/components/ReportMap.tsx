@@ -1,160 +1,128 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { Circle, CircleMarker, MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { Report, ReportCategory } from '@/types';
-import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import { useMap } from 'react-leaflet';
+import { Fragment, useEffect } from 'react';
+import { Report } from '@/types';
+import { HotspotSummary } from '@/types/map';
 
-// Fix default marker issue
-const defaultIconPrototype = L.Icon.Default.prototype as L.Icon.Default & {
-  _getIconUrl?: unknown;
-};
-delete defaultIconPrototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-  iconUrl:
-    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-  shadowUrl:
-    'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-});
-
-interface Props {
+interface ReportMapProps {
   reports: Report[];
+  hotspots: HotspotSummary[];
+  selectedReport?: Report | null;
+  selectedHotspot?: HotspotSummary | null;
+  onReportSelect: (report: Report) => void;
+  onHotspotSelect: (hotspot: HotspotSummary) => void;
 }
 
-const CATEGORY_FILTERS: Array<ReportCategory | "ALL"> = [
-  "ALL",
-  "Waste",
-  "Pothole",
-  "Streetlight",
-  "Drainage",
-  "Water Supply",
-];
+function ZoomToSelection({ report, hotspot }: { report?: Report | null; hotspot?: HotspotSummary | null }) {
+  const map = useMap();
 
-const createPulseIcon = () =>
-  L.divIcon({
-    className: '',
-    html: `<div class="pulse-marker"></div>`,
-    iconSize: [20, 20],
+  useEffect(() => {
+    if (report) {
+      map.setView([report.location.lat, report.location.lng], 15, { animate: true });
+    } else if (hotspot) {
+      map.setView([hotspot.center_lat, hotspot.center_lng], 14, { animate: true });
+    }
+  }, [hotspot, map, report]);
+
+  return null;
+}
+
+function FitMapBounds({ reports, hotspots }: { reports: Report[]; hotspots: HotspotSummary[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    const points = [
+      ...reports.map((report) => [report.location.lat, report.location.lng] as [number, number]),
+      ...hotspots.map((hotspot) => [hotspot.center_lat, hotspot.center_lng] as [number, number]),
+    ];
+
+    if (points.length > 1) {
+      map.fitBounds(L.latLngBounds(points), { padding: [42, 42] });
+    } else if (points.length === 1) {
+      map.setView(points[0], 13);
+    }
+  }, [hotspots, map, reports]);
+
+  return null;
+}
+
+function createReportIcon(priority: Report['priority'], status: Report['status']) {
+  return L.divIcon({
+    className: 'civic-map-marker',
+    html: `<span class="civic-map-marker__dot civic-map-marker__dot--${priority.toLowerCase()} ${status === 'Completed' ? 'civic-map-marker__dot--resolved' : ''}"></span>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
   });
+}
 
-const getMarkerColor = (priority: string) => {
-  if (priority === "HIGH") return "red";
-  if (priority === "MEDIUM") return "orange";
-  return "green";
-};
-
-const createIcon = (color: string) =>
-  new L.Icon({
-    iconUrl: `https://maps.google.com/mapfiles/ms/icons/${color}-dot.png`,
-    iconSize: [32, 32],
-  });
-
-export default function ReportMap({ reports }: Props) {
-  const navigate = useNavigate();
-
-  const [selectedCategory, setSelectedCategory] = useState<
-    ReportCategory | "ALL"
-  >("ALL");
-
-  const filteredReports = reports
-    .filter((r) => r.location.lat && r.location.lng)
-    .filter((r) =>
-      selectedCategory === "ALL" ? true : r.category === selectedCategory
-    );
-
-  const center =
-    filteredReports.length > 0
-      ? [filteredReports[0].location.lat, filteredReports[0].location.lng]
-      : [20.5937, 78.9629];
-
-  function FitBounds({ reports }: { reports: Report[] }) {
-    const map = useMap();
-
-    useEffect(() => {
-      if (reports.length === 0) return;
-
-      const bounds: [number, number][] = reports.map(r => [r.location.lat, r.location.lng]);
-
-      if (bounds.length > 0) {
-        map.fitBounds(L.latLngBounds(bounds), { padding: [50, 50] });
-      }
-    }, [reports, map]);
-
-    return null;
-  }
+export default function ReportMap({
+  reports,
+  hotspots,
+  selectedReport,
+  selectedHotspot,
+  onReportSelect,
+  onHotspotSelect,
+}: ReportMapProps) {
+  const center: [number, number] = reports.length
+    ? [reports[0].location.lat, reports[0].location.lng]
+    : [23.2599, 77.4125];
 
   return (
-    <div className="space-y-4">
+    <MapContainer center={center} zoom={12} scrollWheelZoom className="h-full min-h-[30rem] w-full">
+      <TileLayer
+        attribution="&copy; OpenStreetMap contributors"
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <FitMapBounds reports={reports} hotspots={hotspots} />
+      <ZoomToSelection report={selectedReport} hotspot={selectedHotspot} />
 
-      <div className="flex flex-wrap gap-2">
-        {CATEGORY_FILTERS.map((cat) => (
-          <button
-            key={cat}
-            onClick={() => setSelectedCategory(cat)}
-            className={`px-3 py-1 rounded-full text-sm border ${
-              selectedCategory === cat
-                ? "bg-blue-600 text-white"
-                : "bg-white text-black"
-            }`}
-          >
-            {cat}
-          </button>
-        ))}
-      </div>
+      {hotspots.map((hotspot) => {
+        if (hotspot.cluster_id === -1) return null;
+        const riskColor = hotspot.risk_level === 'HIGH'
+          ? '#ef4444'
+          : hotspot.risk_level === 'MEDIUM'
+            ? '#f59e0b'
+            : '#0ea5e9';
+        const radius = Math.max(80, Math.min(220, 80 + hotspot.risk_score * 140));
 
-      <div className="flex gap-4 items-center text-sm bg-white dark:bg-gray-800 text-black dark:text-white px-4 py-2 rounded-md shadow-md">
-        <div className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
-          <span>High</span>
-        </div>
+        return (
+          <Fragment key={`hotspot-${hotspot.cluster_id}`}>
+            <Circle
+              center={[hotspot.center_lat, hotspot.center_lng]}
+              radius={radius}
+              pathOptions={{ color: riskColor, fillColor: riskColor, fillOpacity: 0.12, weight: 2 }}
+              eventHandlers={{ click: () => onHotspotSelect(hotspot) }}
+            />
+            <CircleMarker
+              center={[hotspot.center_lat, hotspot.center_lng]}
+              radius={8}
+              pathOptions={{ color: riskColor, fillColor: riskColor, fillOpacity: 0.85, weight: 2 }}
+              eventHandlers={{ click: () => onHotspotSelect(hotspot) }}
+            >
+              <Popup>
+                <strong>DBSCAN hotspot {hotspot.cluster_id}</strong>
+                <br />
+                {hotspot.complaint_count} reports · {hotspot.risk_level} risk
+              </Popup>
+            </CircleMarker>
+          </Fragment>
+        );
+      })}
 
-        <div className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-orange-400 inline-block"></span>
-          <span>Medium</span>
-        </div>
-
-        <div className="flex items-center gap-1">
-          <span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
-          <span>Low</span>
-        </div>
-      </div>
-
-      <MapContainer
-        center={center as [number, number]}
-        zoom={10}
-        style={{ height: '500px', width: '100%' }}
-      >
-        <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <FitBounds reports={filteredReports} />
-
-        {filteredReports.map((report) => (
-          <Marker
-            key={report.id}
-            position={[report.location.lat, report.location.lng]}
-            icon={
-              report.priority === "HIGH"
-                ? createPulseIcon()
-                : createIcon(getMarkerColor(report.priority))
-            }
-            eventHandlers={{
-              click: () => navigate(`/reports/${report.id}`),
-            }}
-          >
-            <Popup>
-              <strong>{report.category}</strong> <br />
-              {report.description || "No description"} <br />
-              Location: {report.location.address || "No address"} <br />
-              Priority: {report.priority}
-            </Popup>
-          </Marker>
-        ))}
-      </MapContainer>
-    </div>
+      {reports.map((report) => (
+        <Marker
+          key={report.id}
+          position={[report.location.lat, report.location.lng]}
+          icon={createReportIcon(report.priority, report.status)}
+          eventHandlers={{ click: () => onReportSelect(report) }}
+        >
+          <Popup>
+            <strong>{report.category} issue</strong>
+            <br />
+            {report.status} · {report.priority} priority
+          </Popup>
+        </Marker>
+      ))}
+    </MapContainer>
   );
 }

@@ -222,7 +222,7 @@ export function ReportForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Card className="mx-auto max-w-2xl">
+      <Card className="mx-auto max-w-2xl border-border/70 bg-card/80 shadow-sm backdrop-blur-xl">
         <CardHeader>
           <CardTitle>Report an Issue</CardTitle>
         </CardHeader>
@@ -242,8 +242,8 @@ export function ReportForm() {
                     htmlFor={item.value}
                     className={`flex h-24 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border p-3 text-center transition ${
                       category === item.value
-                        ? 'border-blue-600 bg-blue-600 text-white'
-                        : 'border-gray-500 bg-transparent text-gray-300 hover:bg-gray-700'
+                        ? 'border-primary bg-primary text-primary-foreground shadow-sm'
+                        : 'border-border bg-muted/30 text-foreground hover:border-primary/50 hover:bg-primary/5'
                     }`}
                   >
                     {item.icon}
@@ -258,7 +258,16 @@ export function ReportForm() {
             <Label>Photo</Label>
             <div
               onClick={() => photoInputRef.current?.click()}
-              className="flex h-40 cursor-pointer items-center justify-center rounded-md border"
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  photoInputRef.current?.click();
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Upload a report photo"
+              className="flex h-40 cursor-pointer items-center justify-center rounded-xl border border-dashed border-border bg-muted/30 transition-colors hover:border-primary/60 hover:bg-primary/5"
             >
               <input
                 type="file"
@@ -270,7 +279,7 @@ export function ReportForm() {
               {isUploading ? (
                 <Loader className="h-6 w-6 animate-spin" />
               ) : photoUrl ? (
-                <img src={photoUrl} alt="Reported civic issue" className="h-full object-contain" />
+                <img src={photoUrl} alt="Reported civic issue" loading="lazy" className="h-full object-contain" />
               ) : (
                 <Upload className="h-6 w-6" />
               )}

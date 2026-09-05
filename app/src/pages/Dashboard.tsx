@@ -95,17 +95,17 @@ const Dashboard = () => {
     <MainLayout>
       <div className="space-y-8">
         {/* Hero Section */}
-        <div className="flex flex-col gap-6 rounded-3xl border border-zinc-800 bg-zinc-900/60 p-8 backdrop-blur-xl md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-col gap-6 rounded-2xl border border-border/70 bg-card/80 p-6 shadow-sm backdrop-blur-xl md:flex-row md:items-center md:justify-between md:p-8">
           <div>
-            <p className="mb-2 text-sm font-medium uppercase tracking-[0.2em] text-blue-400">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
               Civic Intelligence Platform
             </p>
 
-            <h1 className="text-4xl font-bold tracking-tight text-white">
+            <h1 className="text-4xl font-bold tracking-tight">
               Public Dashboard
             </h1>
 
-            <p className="mt-3 max-w-2xl text-zinc-400">
+            <p className="mt-3 max-w-2xl text-muted-foreground">
               Analyze, monitor, and manage urban civic issues using
               AI-powered insights, geospatial analytics, and real-time
               reporting.
@@ -115,34 +115,35 @@ const Dashboard = () => {
           <div className="flex flex-wrap gap-3">
             <Button
               onClick={() => navigate("/map")}
-              className="rounded-2xl bg-blue-600 px-6 py-6 text-sm font-medium text-white transition-all hover:bg-blue-500"
+              className="rounded-lg px-6 py-6 text-sm font-medium transition-all"
             >
               Open Map View
             </Button>
 
             <Button
               variant="outline"
-              className="rounded-2xl border-zinc-700 bg-zinc-900 px-6 py-6 text-zinc-200 hover:bg-zinc-800 hover:text-white"
+              onClick={() => navigate("/report")}
+              className="rounded-lg px-6 py-6 text-sm font-medium"
             >
-              Generate Report
+              Report an Issue
             </Button>
           </div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-6 backdrop-blur-xl">
-            <p className="text-sm text-zinc-400">Total Reports</p>
+          <div className="rounded-2xl border border-border/70 bg-card/75 p-6 shadow-sm backdrop-blur-xl">
+            <p className="text-sm text-muted-foreground">Total Reports</p>
 
-            <h2 className="mt-3 text-4xl font-bold text-white">
+            <h2 className="mt-3 text-4xl font-bold text-foreground">
               {reports.length}
             </h2>
           </div>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-6 backdrop-blur-xl">
-            <p className="text-sm text-zinc-400">Pending Issues</p>
+          <div className="rounded-2xl border border-border/70 bg-card/75 p-6 shadow-sm backdrop-blur-xl">
+            <p className="text-sm text-muted-foreground">Pending Issues</p>
 
-            <h2 className="mt-3 text-4xl font-bold text-yellow-400">
+            <h2 className="mt-3 text-4xl font-bold text-amber-500 dark:text-amber-400">
               {
                 reports.filter(
                   (report) => report.status === "Pending"
@@ -151,10 +152,10 @@ const Dashboard = () => {
             </h2>
           </div>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-6 backdrop-blur-xl">
-            <p className="text-sm text-zinc-400">Completed Cases</p>
+          <div className="rounded-2xl border border-border/70 bg-card/75 p-6 shadow-sm backdrop-blur-xl">
+            <p className="text-sm text-muted-foreground">Completed Cases</p>
 
-            <h2 className="mt-3 text-4xl font-bold text-green-400">
+            <h2 className="mt-3 text-4xl font-bold text-emerald-600 dark:text-emerald-400">
               {
                 reports.filter(
                   (report) => report.status === "Completed"
@@ -163,10 +164,10 @@ const Dashboard = () => {
             </h2>
           </div>
 
-          <div className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-6 backdrop-blur-xl">
-            <p className="text-sm text-zinc-400">High Priority</p>
+          <div className="rounded-2xl border border-border/70 bg-card/75 p-6 shadow-sm backdrop-blur-xl">
+            <p className="text-sm text-muted-foreground">High Priority</p>
 
-            <h2 className="mt-3 text-4xl font-bold text-red-400">
+            <h2 className="mt-3 text-4xl font-bold text-destructive">
               {
                 reports.filter(
                   (report) =>
@@ -179,10 +180,10 @@ const Dashboard = () => {
         </div>
 
         {/* Dashboard Content */}
-        <div className="rounded-3xl border border-zinc-800 bg-zinc-900/60 p-6 backdrop-blur-xl">
+        <div className="rounded-2xl border border-border/70 bg-card/75 p-4 shadow-sm backdrop-blur-xl md:p-6">
           {loading ? (
             <div className="flex h-40 items-center justify-center">
-              <p className="text-zinc-400">
+              <p className="text-muted-foreground">
                 Loading civic reports...
               </p>
             </div>
