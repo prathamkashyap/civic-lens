@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-labelledby="title desc">
+  <title id="title">Civic Lens mark</title>
+  <desc id="desc">A blue civic lens mark with an amber location point.</desc>
+  <rect width="96" height="96" rx="24" fill="#082f49"/>
+  <circle cx="48" cy="44" r="25" fill="none" stroke="#38bdf8" stroke-width="7"/>
+  <circle cx="48" cy="44" r="9" fill="#fbbf24"/>
+  <path d="M48 76 35 61h26L48 76Z" fill="#38bdf8"/>
+</svg>
