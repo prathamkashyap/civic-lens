@@ -38,6 +38,13 @@ venv/
 *.tmp
 *.bak
 
+# macOS
+._*
+Thumbs.db
+
+# IDE
+.idea/
+
 # Private academic / submission material
 docs/phase-2/signatures/
 docs/phase-2/submitted-reports/individual-reports/
