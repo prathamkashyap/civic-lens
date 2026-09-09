@@ -2,7 +2,7 @@
 
 A civic intelligence platform for reporting, prioritizing, and visualizing urban issues across a city.
 
-<p align="center"><img src="docs/civic-lens-mark.svg" width="96" alt="Civic Lens mark" /></p>
+<p align="center"><img src="docs/diagrams/gradient-target-chat-bubble-icon.png" width="96" alt="Civic Lens mark" /></p>
 
 <p align="center">
   <a href="https://civic-lens-platform.vercel.app"><img src="https://img.shields.io/badge/Live-Vercel-black?logo=vercel&logoColor=white" alt="Live on Vercel" /></a>
@@ -60,7 +60,13 @@ Dashboard / Map / Insights UI
   The detailed system boundary and data flow are documented in
   [ARCHITECTURE.md](ARCHITECTURE.md).
 
-  ![Civic Lens architecture and application flow](docs/phase-1/reports/diagrams-and-flowcharts/Architectural%20and%20Application%20Flow.svg)
+### System Architecture
+
+  ![Civic Lens System Architecture](docs/diagrams/system-architecture.png)
+
+### Application Flow
+
+  ![Civic Lens Application Flowchart](docs/diagrams/application-flowchart.png)
 
 ## Tech stack
 
@@ -96,6 +102,7 @@ Dashboard / Map / Insights UI
 │   └── paper-one-column/
 │
 ├── docs/                        # project documentation and phase artifacts
+│   ├── diagrams/               # architecture diagrams and project logos
 ├── archive/                     # legacy and historical drafts
 ├── PROJECT_CHANGE_REPORT.md     # repo cleanup and project history summary
 ├── README.md                    # this file
@@ -180,6 +187,7 @@ The project uses a hybrid-data style pipeline:
 - [CONTRIBUTING.md](CONTRIBUTING.md) — setup, checks, and contribution workflow
 - [DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) — step-by-step repo rename and Vercel deployment guide
 - [docs/](docs/) — project notes, reports, and submission artifacts
+- [docs/diagrams/](docs/diagrams/) — architecture diagrams, application flow, and project logos
 - [research/](research/) — research experiments and paper materials
 
 ## Current status
