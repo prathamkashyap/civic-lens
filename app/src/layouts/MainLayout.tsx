@@ -1,10 +1,11 @@
 import { ReactNode, useState } from "react";
 import { motion } from "framer-motion";
-import { BarChart3, FileText, LayoutDashboard, Map, Menu, Settings, ShieldCheck } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
+import { BarChart3, FileText, LayoutDashboard, Map, Menu, Settings, ShieldCheck, LogIn } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { useAuth } from "@/context/AuthContext";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -12,8 +13,11 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user, isGuest } = useAuth();
   const [mobileNavigationOpen, setMobileNavigationOpen] = useState(false);
-  const navigation = [
+
+  const allNavigation = [
     { label: "Overview", path: "/dashboard", icon: LayoutDashboard },
     { label: "Reports", path: "/reports", icon: FileText },
     { label: "Map", path: "/map", icon: Map },
@@ -21,12 +25,19 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     { label: "Admin", path: "/admin", icon: ShieldCheck },
     { label: "Settings", path: "/help-center", icon: Settings },
   ];
+
+  // Filter: guests see limited nav, non-admins don't see Admin
+  const navigation = allNavigation.filter(({ path }) => {
+    if (path === "/admin" && (!user || user.email !== "admin@civiclens.com")) return false;
+    return true;
+  });
+
   const pageTitle = location.pathname.startsWith("/reports")
     ? location.pathname !== "/reports" ? "Report details" : "Reports workspace"
     : location.pathname.startsWith("/map") || location.pathname.endsWith("/map")
       ? "Civic map"
-        : location.pathname.startsWith("/admin")
-          ? "Admin overview"
+      : location.pathname.startsWith("/admin")
+        ? "Admin overview"
       : "Dashboard overview";
 
   const renderNavigation = (mobile = false) => navigation.map(({ label, path, icon: Icon }) => {
@@ -62,6 +73,22 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           </Link>
         </div>
 
+        {isGuest && (
+          <div className="mx-4 mt-4 rounded-lg border border-border/70 bg-muted/50 px-3 py-2.5">
+            <p className="text-xs text-muted-foreground">
+              You&apos;re browsing as a <span className="font-medium text-foreground">Guest</span>
+            </p>
+            <Button
+              variant="link"
+              size="sm"
+              className="h-auto p-0 text-xs"
+              onClick={() => navigate("/login")}
+            >
+              Sign in for full access
+            </Button>
+          </div>
+        )}
+
         <nav className="space-y-1 p-4">
           <p className="px-3 pb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Workspace</p>
           {renderNavigation()}
@@ -83,6 +110,12 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           </div>
 
           <div className="flex items-center gap-4">
+            {isGuest && (
+              <Button variant="outline" size="sm" className="hidden md:flex gap-1.5" onClick={() => navigate("/login")}>
+                <LogIn className="h-3.5 w-3.5" />
+                Sign In
+              </Button>
+            )}
             <ThemeToggle />
           </div>
         </header>
@@ -104,9 +137,22 @@ const MainLayout = ({ children }: MainLayoutProps) => {
             <span className="urban-gradient flex h-8 w-8 items-center justify-center rounded-lg text-sm font-bold text-white">CL</span>
             Civic Lens
           </SheetTitle>
+          {isGuest && (
+            <div className="mb-4 rounded-lg border border-border/70 bg-muted/50 px-3 py-2.5">
+              <p className="text-xs text-muted-foreground">
+                Browsing as <span className="font-medium text-foreground">Guest</span>
+              </p>
+            </div>
+          )}
           <nav className="space-y-1">
             <p className="px-3 pb-3 text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">Workspace</p>
             {renderNavigation(true)}
+            {isGuest && (
+              <Button variant="outline" size="sm" className="w-full mt-4 gap-1.5" onClick={() => { setMobileNavigationOpen(false); navigate("/login"); }}>
+                <LogIn className="h-3.5 w-3.5" />
+                Sign In
+              </Button>
+            )}
           </nav>
         </SheetContent>
       </Sheet>

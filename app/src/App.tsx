@@ -9,12 +9,12 @@ import {
 } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "./context/ThemeContext";
+import { AuthProvider, useAuth } from "./context/AuthContext";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Toaster } from "./components/ui/toaster";
 import { Toaster as Sonner } from "./components/ui/sonner";
 
-
-// Pages load on demand so the initial route does not include every workflow.
+// Pages load on demand
 const ReportMapView = lazy(() => import("./pages/ReportMapView"));
 const Index = lazy(() => import("./pages/Index"));
 const Report = lazy(() => import("./pages/Report"));
@@ -26,9 +26,9 @@ const HelpCenter = lazy(() => import("./pages/HelpCenter"));
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const Login = lazy(() => import("./pages/Login"));
+const SignIn = lazy(() => import("./pages/SignIn"));
+const SignUp = lazy(() => import("./pages/SignUp"));
 const Admin = lazy(() => import("./pages/Admin"));
-import { auth } from "./firebaseConfig";
-import { onAuthStateChanged, User } from "firebase/auth";
 
 // Components
 import PageTransition from "./components/PageTransition";
@@ -37,16 +37,19 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 const queryClient = new QueryClient();
 
 const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const [user, setUser] = useState<User | null>(auth.currentUser);
-  const [loading, setLoading] = useState(true);
+  const { user, isGuest, loading } = useAuth();
+  if (loading) return null;
+  return user ? children : <Navigate to="/login" replace />;
+};
 
-  useEffect(() => {
-    return onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setLoading(false);
-    });
-  }, []);
+const GuestOrUserRoute = ({ children }: { children: JSX.Element }) => {
+  const { user, isGuest, loading } = useAuth();
+  if (loading) return null;
+  return user || isGuest ? children : <Navigate to="/login" replace />;
+};
 
+const AuthOnlyRoute = ({ children }: { children: JSX.Element }) => {
+  const { user, loading } = useAuth();
   if (loading) return null;
   return user ? children : <Navigate to="/login" replace />;
 };
@@ -79,73 +82,29 @@ const AppRoutes = () => {
       {transitioning && <PageTransition />}
       <Suspense fallback={<RouteFallback />}>
         <Routes location={location}>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/help-center" element={<HelpCenter />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/terms-of-service" element={<TermsOfService />} />
-        <Route path="/report/:id/map" element={<ReportMapView />} />
+          {/* Public Auth Routes */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="/signup" element={<SignUp />} />
 
-        <Route
-          path="/map"
-          element={
-            <ProtectedRoute>
-              <ReportMapView />
-            </ProtectedRoute>
-          }
-        />
+          {/* Info Pages (public) */}
+          <Route path="/help-center" element={<HelpCenter />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/report/:id/map" element={<ReportMapView />} />
 
+          {/* Guest-accessible routes */}
+          <Route path="/" element={<GuestOrUserRoute><Index /></GuestOrUserRoute>} />
+          <Route path="/reports" element={<GuestOrUserRoute><Reports /></GuestOrUserRoute>} />
+          <Route path="/reports/:id" element={<GuestOrUserRoute><ReportDetail /></GuestOrUserRoute>} />
+          <Route path="/dashboard" element={<GuestOrUserRoute><Dashboard /></GuestOrUserRoute>} />
+          <Route path="/map" element={<GuestOrUserRoute><ReportMapView /></GuestOrUserRoute>} />
 
-        {/* Protected Routes */}
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <Index />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/report"
-          element={
-            <ProtectedRoute>
-              <Report />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute>
-              <Reports />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/reports/:id"
-          element={
-            <ProtectedRoute>
-              <ReportDetail />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute>
-              <Admin />
-            </ProtectedRoute>
-          }
-        />
-        <Route path="*" element={<NotFound />} />
+          {/* Auth-required routes */}
+          <Route path="/report" element={<AuthOnlyRoute><Report /></AuthOnlyRoute>} />
+          <Route path="/admin" element={<AuthOnlyRoute><Admin /></AuthOnlyRoute>} />
+
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </>
@@ -160,11 +119,13 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter basename="/">
-            <div className="flex min-h-screen flex-col bg-muted/20">
-              <main className="flex-grow">
-                <AppRoutes />
-              </main>
-            </div>
+            <AuthProvider>
+              <div className="flex min-h-screen flex-col bg-muted/20">
+                <main className="flex-grow">
+                  <AppRoutes />
+                </main>
+              </div>
+            </AuthProvider>
           </BrowserRouter>
         </TooltipProvider>
       </ThemeProvider>
