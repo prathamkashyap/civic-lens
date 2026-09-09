@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Gradient Target Icon — Studio</title>
+<style>
+  :root{
+    --bg: #0a1930;
+    --panel: #0f2440;
+    --panel-2: #142b4c;
+    --line: #1f3c60;
+    --text: #e7edf5;
+    --muted: #93a6c2;
+    --accent: #FCB726;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;}
+  body{
+    background: radial-gradient(1200px 800px at 20% -10%, #123157 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: 'Segoe UI', ui-sans-serif, system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    display:flex;
+    min-height:100vh;
+  }
+  .stage{
+    flex: 1 1 auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding: 40px;
+    position:relative;
+  }
+  .stage-inner{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:18px;
+  }
+  #iconWrap{
+    width: min(60vw, 460px);
+    height: min(60vw, 460px);
+    filter: drop-shadow(0 30px 60px rgba(0,0,0,0.45));
+  }
+  #iconWrap svg{ width:100%; height:100%; display:block; }
+
+  .ring-spin{
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+  }
+  .spin-on .ring-spin{
+    animation: spin 7s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .hint{
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: .01em;
+  }
+
+  aside{
+    flex: 0 0 340px;
+    background: linear-gradient(180deg, var(--panel), var(--panel-2));
+    border-left: 1px solid var(--line);
+    padding: 28px 24px 32px;
+    overflow-y:auto;
+    max-height:100vh;
+  }
+  aside h1{
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 2px;
+    letter-spacing: .01em;
+  }
+  aside .sub{
+    color: var(--muted);
+    font-size: 12.5px;
+    margin: 0 0 22px;
+    line-height:1.5;
+  }
+  .group{
+    margin-bottom: 22px;
+  }
+  .group-title{
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .swatches{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .swatch{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:6px;
+  }
+  .swatch input[type=color]{
+    -webkit-appearance:none;
+    appearance:none;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    padding:0;
+    background:none;
+    cursor:pointer;
+  }
+  .swatch input[type=color]::-webkit-color-swatch-wrapper{padding:0;}
+  .swatch input[type=color]::-webkit-color-swatch{border:none;border-radius:9px;}
+  .swatch label{ font-size: 11px; color: var(--muted); }
+
+  .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size: 12.5px;
+    margin-bottom: 6px;
+    color: var(--text);
+  }
+  .row span.val{ color: var(--muted); font-variant-numeric: tabular-nums; }
+  input[type=range]{
+    width:100%;
+    accent-color: var(--accent);
+    margin-bottom: 16px;
+  }
+
+  .toggle-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+  .toggle-row span{ font-size:13px; }
+  .switch{
+    position:relative;
+    width:38px; height:22px;
+    background:#22406a;
+    border-radius:999px;
+    cursor:pointer;
+    transition: background .15s ease;
+    flex-shrink:0;
+  }
+  .switch.on{ background: var(--accent); }
+  .switch::after{
+    content:'';
+    position:absolute;
+    top:2px; left:2px;
+    width:18px; height:18px;
+    border-radius:50%;
+    background:#fff;
+    transition: transform .15s ease;
+  }
+  .switch.on::after{ transform: translateX(16px); }
+
+  button.primary{
+    width:100%;
+    padding: 12px 14px;
+    background: var(--accent);
+    color: #1a1200;
+    border:none;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor:pointer;
+    margin-top: 6px;
+  }
+  button.primary:hover{ filter: brightness(1.06); }
+  button.ghost{
+    width:100%;
+    padding: 11px 14px;
+    background: transparent;
+    color: var(--text);
+    border:1px solid var(--line);
+    border-radius: 10px;
+    font-size: 13px;
+    cursor:pointer;
+    margin-top: 8px;
+  }
+  button.ghost:hover{ background: rgba(255,255,255,0.04); }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="stage-inner">
+    <div id="iconWrap"></div>
+    <div class="hint">Drag any control — the mark redraws live and stays seam-free at every setting.</div>
+  </div>
+</div>
+
+<aside>
+  <h1>Icon studio</h1>
+  <p class="sub">A parametric version of the mark. Every colour and proportion is a variable, so the ring and tail are always generated as one continuous gradient sweep — there's no seam to hide because there's no seam to begin with.</p>
+
+  <div class="group">
+    <div class="group-title">Palette</div>
+    <div class="swatches">
+      <div class="swatch"><input type="color" id="c-blue" value="#1E88E5"><label>Blue</label></div>
+      <div class="swatch"><input type="color" id="c-cyan" value="#4FC3F7"><label>Cyan</label></div>
+      <div class="swatch"><input type="color" id="c-lavender" value="#C6A9E0"><label>Lavender</label></div>
+      <div class="swatch"><input type="color" id="c-pale" value="#EFE8DB"><label>Pale</label></div>
+      <div class="swatch"><input type="color" id="c-green" value="#95CD73"><label>Green</label></div>
+      <div class="swatch"><input type="color" id="c-yellow" value="#FFD54A"><label>Yellow</label></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Base &amp; dot</div>
+    <div class="swatches">
+      <div class="swatch"><input type="color" id="c-bg" value="#0C2039"><label>Background</label></div>
+      <div class="swatch"><input type="color" id="c-dot" value="#FCB726"><label>Dot</label></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="group-title">Ring geometry</div>
+    <div class="row"><span>Outer radius</span><span class="val" id="v-ro">154</span></div>
+    <input type="range" id="s-ro" min="110" max="180" value="154">
+    <div class="row"><span>Thickness</span><span class="val" id="v-th">40</span></div>
+    <input type="range" id="s-th" min="16" max="60" value="40">
+    <div class="row"><span>Gap angle</span><span class="val" id="v-gap">38</span></div>
+    <input type="range" id="s-gap" min="16" max="70" value="38">
+    <div class="row"><span>Tail length</span><span class="val" id="v-tip">64</span></div>
+    <input type="range" id="s-tip" min="10" max="140" value="64">
+    <div class="row"><span>Tail lean</span><span class="val" id="v-peak">50</span></div>
+    <input type="range" id="s-peak" min="15" max="85" value="50">
+    <div class="row"><span>Corner radius</span><span class="val" id="v-corner">114</span></div>
+    <input type="range" id="s-corner" min="0" max="256" value="114">
+  </div>
+
+  <div class="group">
+    <div class="group-title">Motion</div>
+    <div class="toggle-row">
+      <span>Spin the ring</span>
+      <div class="switch" id="toggle-spin"></div>
+    </div>
+  </div>
+
+  <div class="group">
+    <button class="primary" id="btn-download">Download SVG</button>
+    <button class="ghost" id="btn-random">Shuffle palette</button>
+    <button class="ghost" id="btn-reset">Reset to default</button>
+  </div>
+</aside>
+
+<script>
+const CX = 256, CY = 232;
+
+function hexToRgb(h){
+  h = h.replace('#','');
+  return [parseInt(h.slice(0,2),16), parseInt(h.slice(2,4),16), parseInt(h.slice(4,6),16)];
+}
+function rgbToHex([r,g,b]){
+  const c = v => Math.max(0,Math.min(255,Math.round(v))).toString(16).padStart(2,'0');
+  return '#'+c(r)+c(g)+c(b);
+}
+function lerp(a,b,t){ return a+(b-a)*t; }
+function interpColor(stops, t){
+  if(t<=stops[0][0]) return stops[0][1];
+  if(t>=stops[stops.length-1][0]) return stops[stops.length-1][1];
+  for(let i=0;i<stops.length-1;i++){
+    const [t0,c0]=stops[i], [t1,c1]=stops[i+1];
+    if(t>=t0 && t<=t1){
+      const lt = t1!==t0 ? (t-t0)/(t1-t0) : 0;
+      const r0=hexToRgb(c0), r1=hexToRgb(c1);
+      return rgbToHex([lerp(r0[0],r1[0],lt), lerp(r0[1],r1[1],lt), lerp(r0[2],r1[2],lt)]);
+    }
+  }
+  return stops[stops.length-1][1];
+}
+function ease(x){ return Math.pow(Math.max(0,Math.min(1,x)), 0.85); }
+function pt(cx,cy,r,deg){
+  const rad = deg*Math.PI/180;
+  return [cx + r*Math.cos(rad), cy - r*Math.sin(rad)];
+}
+
+function getColors(){
+  return {
+    blue: document.getElementById('c-blue').value,
+    cyan: document.getElementById('c-cyan').value,
+    lavender: document.getElementById('c-lavender').value,
+    pale: document.getElementById('c-pale').value,
+    green: document.getElementById('c-green').value,
+    yellow: document.getElementById('c-yellow').value,
+    bg: document.getElementById('c-bg').value,
+    dot: document.getElementById('c-dot').value,
+  };
+}
+
+function buildSVG(){
+  const col = getColors();
+  const RO = +document.getElementById('s-ro').value;
+  const TH = +document.getElementById('s-th').value;
+  const RI = RO - TH;
+  const GAP = +document.getElementById('s-gap').value;
+  const TIPLEN = +document.getElementById('s-tip').value;
+  const R_TIP = RO + TIPLEN;
+  const U_PEAK = (+document.getElementById('s-peak').value)/100;
+  const CORNER = +document.getElementById('s-corner').value;
+
+  document.getElementById('v-ro').textContent = RO;
+  document.getElementById('v-th').textContent = TH;
+  document.getElementById('v-gap').textContent = GAP;
+  document.getElementById('v-tip').textContent = TIPLEN;
+  document.getElementById('v-peak').textContent = document.getElementById('s-peak').value;
+  document.getElementById('v-corner').textContent = CORNER;
+
+  const theta_a = 248;
+  const theta_b = theta_a - (360 - GAP);
+  const RING_SWEEP = 360 - GAP;
+  const GAP_SWEEP = GAP;
+
+  const ringStops = [
+    [0.00, col.blue], [0.16, col.cyan], [0.50, col.lavender],
+    [0.62, col.pale], [0.82, col.green], [1.00, col.yellow],
+  ];
+  const tailStops = [
+    [0.00, col.yellow], [0.50, col.pale], [1.00, col.blue],
+  ];
+
+  function radiusAt(u){
+    let outer, inner;
+    if(u<=U_PEAK){
+      const f = U_PEAK>0 ? ease(u/U_PEAK) : 1;
+      outer = lerp(RO, R_TIP, f); inner = lerp(RI, R_TIP, f);
+    } else {
+      const f = U_PEAK<1 ? ease((u-U_PEAK)/(1-U_PEAK)) : 1;
+      outer = lerp(R_TIP, RO, f); inner = lerp(R_TIP, RI, f);
+    }
+    return [outer, inner];
+  }
+
+  const N_RING = 200, N_TAIL = 70;
+  let segs = [];
+  for(let i=0;i<N_RING;i++){
+    const t0=i/N_RING, t1=(i+1)/N_RING;
+    const ang0 = theta_a + RING_SWEEP*t0;
+    const ang1 = theta_a + RING_SWEEP*t1 + 0.5;
+    const c = interpColor(ringStops, (t0+t1)/2);
+    const o0=pt(CX,CY,RO,ang0), o1=pt(CX,CY,RO,ang1);
+    const i1=pt(CX,CY,RI,ang1), i0=pt(CX,CY,RI,ang0);
+    segs.push(`<path d="M ${o0[0].toFixed(2)},${o0[1].toFixed(2)} L ${o1[0].toFixed(2)},${o1[1].toFixed(2)} L ${i1[0].toFixed(2)},${i1[1].toFixed(2)} L ${i0[0].toFixed(2)},${i0[1].toFixed(2)} Z" fill="${c}"/>`);
+  }
+  for(let i=0;i<N_TAIL;i++){
+    const u0=i/N_TAIL, u1=(i+1)/N_TAIL;
+    const ang0 = theta_b + GAP_SWEEP*u0;
+    const ang1 = theta_b + GAP_SWEEP*u1 + 0.3;
+    const c = interpColor(tailStops, (u0+u1)/2);
+    const [ro0,ri0] = radiusAt(u0);
+    const [ro1,ri1] = radiusAt(u1);
+    const o0=pt(CX,CY,ro0,ang0), o1=pt(CX,CY,ro1,ang1);
+    const i1=pt(CX,CY,ri1,ang1), i0=pt(CX,CY,ri0,ang0);
+    segs.push(`<path d="M ${o0[0].toFixed(2)},${o0[1].toFixed(2)} L ${o1[0].toFixed(2)},${o1[1].toFixed(2)} L ${i1[0].toFixed(2)},${i1[1].toFixed(2)} L ${i0[0].toFixed(2)},${i0[1].toFixed(2)} Z" fill="${c}"/>`);
+  }
+
+  const bgRgb = hexToRgb(col.bg);
+  const bgLight = rgbToHex([bgRgb[0]+22, bgRgb[1]+22, bgRgb[2]+24]);
+  const dotRgb = hexToRgb(col.dot);
+  const dotLight = rgbToHex([Math.min(255,dotRgb[0]+18), Math.min(255,dotRgb[1]+30), Math.min(255,dotRgb[2]+40)]);
+  const dotDark = rgbToHex([dotRgb[0]-25, dotRgb[1]-30, dotRgb[2]-15]);
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bgGrad" x1="60" y1="20" x2="452" y2="492" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${bgLight}"/>
+      <stop offset="100%" stop-color="${col.bg}"/>
+    </linearGradient>
+    <radialGradient id="midDisc" cx="${CX}" cy="${CY}" r="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${bgLight}"/>
+      <stop offset="65%" stop-color="${col.bg}"/>
+      <stop offset="100%" stop-color="${col.bg}"/>
+    </radialGradient>
+    <radialGradient id="innerDisc" cx="${CX-8}" cy="${CY-8}" r="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#102539"/>
+      <stop offset="100%" stop-color="#0A1A2C"/>
+    </radialGradient>
+    <radialGradient id="dotGrad" cx="${CX-14}" cy="${CY-16}" r="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${dotLight}"/>
+      <stop offset="60%" stop-color="${col.dot}"/>
+      <stop offset="100%" stop-color="${dotDark}"/>
+    </radialGradient>
+    <clipPath id="squircle">
+      <rect x="0" y="0" width="512" height="512" rx="${CORNER}" ry="${CORNER}"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#squircle)">
+    <rect x="0" y="0" width="512" height="512" fill="url(#bgGrad)"/>
+    <circle cx="${CX}" cy="${CY}" r="116" fill="url(#midDisc)"/>
+    <circle cx="${CX}" cy="${CY}" r="88" fill="url(#innerDisc)"/>
+    <g class="ring-spin">
+${segs.join('\n')}
+    </g>
+    <circle cx="${CX}" cy="${CY}" r="58" fill="url(#dotGrad)"/>
+  </g>
+</svg>`;
+}
+
+let spinOn = false;
+function render(){
+  const svg = buildSVG();
+  document.getElementById('iconWrap').innerHTML = svg;
+  document.getElementById('iconWrap').classList.toggle('spin-on', spinOn);
+}
+
+const ids = ['s-ro','s-th','s-gap','s-tip','s-peak','s-corner',
+             'c-blue','c-cyan','c-lavender','c-pale','c-green','c-yellow','c-bg','c-dot'];
+ids.forEach(id => document.getElementById(id).addEventListener('input', render));
+
+document.getElementById('toggle-spin').addEventListener('click', (e) => {
+  spinOn = !spinOn;
+  e.currentTarget.classList.toggle('on', spinOn);
+  document.getElementById('iconWrap').classList.toggle('spin-on', spinOn);
+});
+
+document.getElementById('btn-download').addEventListener('click', () => {
+  const svg = buildSVG();
+  const blob = new Blob([svg], {type:'image/svg+xml'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'gradient_target_chat_icon.svg';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+const defaults = {
+  'c-blue':'#1E88E5','c-cyan':'#4FC3F7','c-lavender':'#C6A9E0','c-pale':'#EFE8DB',
+  'c-green':'#95CD73','c-yellow':'#FFD54A','c-bg':'#0C2039','c-dot':'#FCB726',
+  's-ro':154,'s-th':40,'s-gap':38,'s-tip':64,'s-peak':50,'s-corner':114
+};
+document.getElementById('btn-reset').addEventListener('click', () => {
+  Object.entries(defaults).forEach(([id,v]) => document.getElementById(id).value = v);
+  render();
+});
+
+function randHue(base){
+  const [r,g,b] = hexToRgb(base);
+  const shift = (Math.random()-0.5)*70;
+  function rot(r,g,b,deg){
+    // quick hue rotation via HSL
+    let rr=r/255, gg=g/255, bb=b/255;
+    const max=Math.max(rr,gg,bb), min=Math.min(rr,gg,bb);
+    let h,s,l=(max+min)/2;
+    if(max===min){h=s=0;}
+    else{
+      const d=max-min;
+      s = l>0.5 ? d/(2-max-min) : d/(max+min);
+      switch(max){
+        case rr: h=(gg-bb)/d+(gg<bb?6:0); break;
+        case gg: h=(bb-rr)/d+2; break;
+        default: h=(rr-gg)/d+4;
+      }
+      h/=6;
+    }
+    h = (h*360 + deg + 360) % 360 / 360;
+    function hue2rgb(p,q,t){
+      if(t<0)t+=1; if(t>1)t-=1;
+      if(t<1/6) return p+(q-p)*6*t;
+      if(t<1/2) return q;
+      if(t<2/3) return p+(q-p)*(2/3-t)*6;
+      return p;
+    }
+    let R,G,B;
+    if(s===0){R=G=B=l;}
+    else{
+      const q = l<0.5 ? l*(1+s) : l+s-l*s;
+      const p = 2*l-q;
+      R=hue2rgb(p,q,h+1/3); G=hue2rgb(p,q,h); B=hue2rgb(p,q,h-1/3);
+    }
+    return [R*255,G*255,B*255];
+  }
+  return rgbToHex(rot(r,g,b,shift));
+}
+document.getElementById('btn-random').addEventListener('click', () => {
+  const shift = (Math.random()-0.5)*100;
+  ['c-blue','c-cyan','c-lavender','c-pale','c-green','c-yellow'].forEach(id=>{
+    const el = document.getElementById(id);
+    el.value = randHue(el.value);
+  });
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
