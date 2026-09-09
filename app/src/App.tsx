@@ -32,6 +32,7 @@ import { onAuthStateChanged, User } from "firebase/auth";
 
 // Components
 import PageTransition from "./components/PageTransition";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 
 const queryClient = new QueryClient();
 
@@ -51,8 +52,15 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 };
 
 const RouteFallback = () => (
-  <div className="flex min-h-[50vh] items-center justify-center text-sm text-muted-foreground" role="status">
-    Loading Civic Lens...
+  <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 p-8" role="status">
+    <div className="flex w-full max-w-md flex-col gap-3">
+      <div className="h-8 w-48 rounded bg-muted animate-pulse" />
+      <div className="h-4 w-full rounded bg-muted animate-pulse" />
+      <div className="h-4 w-3/4 rounded bg-muted animate-pulse" />
+      <div className="mt-4 h-32 w-full rounded-lg bg-muted animate-pulse" />
+      <div className="h-4 w-1/2 rounded bg-muted animate-pulse" />
+    </div>
+    <span className="sr-only">Loading Civic Lens…</span>
   </div>
 );
 
@@ -145,21 +153,23 @@ const AppRoutes = () => {
 };
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter basename="/">
-          <div className="flex flex-col min-h-screen bg-muted/20">
-            <main className="flex-grow">
-              <AppRoutes />
-            </main>
-          </div>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter basename="/">
+            <div className="flex min-h-screen flex-col bg-muted/20">
+              <main className="flex-grow">
+                <AppRoutes />
+              </main>
+            </div>
+          </BrowserRouter>
+        </TooltipProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

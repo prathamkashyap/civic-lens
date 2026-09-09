@@ -56,4 +56,19 @@ try {
   console.warn("[firebaseConfig] Analytics init skipped:", e);
 }
 
+// Firebase App Check — prevents API key abuse and bot traffic.
+// Requires Firebase Console → Project Settings → App Check to be enabled.
+// Also requires VITE_RECAPTCHA_SITE_KEY env var.
+if (typeof window !== "undefined" && import.meta.env.VITE_RECAPTCHA_SITE_KEY) {
+  import("firebase/app-check")
+    .then(({ initializeAppCheck, ReCaptchaV3Provider }) => {
+      initializeAppCheck(app, {
+        provider: new ReCaptchaV3Provider(import.meta.env.VITE_RECAPTCHA_SITE_KEY!),
+        isTokenAutoRefreshEnabled: true,
+      });
+      console.info("[firebaseConfig] App Check initialized");
+    })
+    .catch((e) => console.warn("[firebaseConfig] App Check init skipped:", e));
+}
+
 export { auth, provider, db, analytics };

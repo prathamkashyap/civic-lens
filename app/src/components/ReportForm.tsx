@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { getAuth } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import {
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { db } from '@/firebaseConfig';
+import { compressImage } from '@/lib/compressImage';
 import { useToast } from '@/hooks/use-toast';
 import { PriorityLevel, ReportCategory } from '@/types';
 import { Button } from './ui/button';
@@ -73,8 +74,10 @@ export function ReportForm() {
 
     setIsUploading(true);
 
+    const compressed = await compressImage(file);
+
     const formData = new FormData();
-    formData.append('file', file);
+    formData.append('file', compressed);
     formData.append('upload_preset', 'urban_unsigned');
 
     try {
@@ -154,9 +157,25 @@ export function ReportForm() {
     }
   };
 
+  // Rate limiting: prevent submissions more than once every 30 seconds
+  const lastSubmitRef = useRef<number>(0);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+
+    // Client-side rate limit: 30 seconds between submissions
+    const now = Date.now();
+    if (now - lastSubmitRef.current < 30_000) {
+      const waitSec = Math.ceil((30_000 - (now - lastSubmitRef.current)) / 1000);
+      toast({
+        variant: 'destructive',
+        title: 'Please wait',
+        description: `You can submit another report in ${waitSec} seconds.`,
+      });
+      setIsSubmitting(false);
+      return;
+    }
 
     if (!address || !photoUrl || !location.lat || !location.lng) {
       toast({
@@ -202,6 +221,7 @@ export function ReportForm() {
         updatedAt: now,
       });
 
+      lastSubmitRef.current = Date.now();
       toast({
         title: 'Report submitted',
         description: 'Your report has been successfully submitted.',

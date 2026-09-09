@@ -1,16 +1,11 @@
 // src/pages/Login.tsx
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
 import loginAnimation from "../assets/login-animation.json";
 import { db, auth, provider } from "../firebaseConfig";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
-import {
-  getRedirectResult,
-  onAuthStateChanged,
-  signInWithPopup,
-  signInWithRedirect,
-} from "firebase/auth";
+import { onAuthStateChanged, signInWithPopup } from "firebase/auth";
 import { toast } from "sonner";
 import { AlertTriangle, Loader2 } from "lucide-react";
 import { Button } from "../components/ui/button";
@@ -22,7 +17,7 @@ function friendlyAuthError(code?: string, fallback?: string): string {
     case "auth/cancelled-popup-request":
       return "The Google sign-in popup was closed before completing. Please try again.";
     case "auth/popup-blocked":
-      return "Your browser blocked the Google sign-in popup. Allow popups for this site, or continue — we'll try a full-page redirect instead.";
+      return "Your browser blocked the sign-in popup. Please allow popups for this site in your browser settings and try again.";
     case "auth/unauthorized-domain":
       return "This domain is not authorized for Firebase Auth. Add it under Firebase Console → Authentication → Settings → Authorized domains.";
     case "auth/operation-not-allowed":
@@ -40,8 +35,6 @@ function friendlyAuthError(code?: string, fallback?: string): string {
 }
 
 async function syncUserProfile(uid: string, name: string | null, email: string | null) {
-  // Non-fatal: a Firestore rules/offline hiccup must never strand a
-  // successfully-authenticated user on the login page.
   try {
     await setDoc(
       doc(db, "users", uid),
@@ -57,39 +50,19 @@ async function syncUserProfile(uid: string, name: string | null, email: string |
 export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [resolvingRedirect, setResolvingRedirect] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
 
-  // If already signed in (or returning from signInWithRedirect), go home.
   useEffect(() => {
-    let cancelled = false;
+    mountedRef.current = true;
     const unsub = onAuthStateChanged(auth, (user) => {
-      if (!cancelled && user && !loading) navigate("/", { replace: true });
+      if (mountedRef.current && user) navigate("/", { replace: true });
     });
-    getRedirectResult(auth)
-      .then(async (result) => {
-        if (result?.user && !cancelled) {
-          await syncUserProfile(
-            result.user.uid,
-            result.user.displayName,
-            result.user.email
-          );
-          navigate("/", { replace: true });
-        }
-      })
-      .catch((err) => {
-        console.error("Redirect sign-in failed:", err);
-        if (!cancelled) setError(friendlyAuthError(err?.code, err?.message));
-      })
-      .finally(() => {
-        if (!cancelled) setResolvingRedirect(false);
-      });
     return () => {
-      cancelled = true;
+      mountedRef.current = false;
       unsub();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [navigate]);
 
   const handleFirebaseLogin = async () => {
     setError(null);
@@ -108,33 +81,14 @@ export default function Login() {
       const message = (err as { message?: string })?.message;
       console.error("Firebase Auth login failed:", err);
 
-      // User dismissed the popup — not an error worth alarming them with.
       if (code === "auth/popup-closed-by-user" || code === "auth/cancelled-popup-request") {
-        setLoading(false);
         return;
       }
-
-      // Popup blocked / COOP issues (common in Safari, Brave, embedded
-      // webviews): fall back to a full-page redirect which always works.
-      if (code === "auth/popup-blocked" || code === "auth/popup-window-blocked") {
-        toast.info("Popup blocked — redirecting to Google instead…");
-        try {
-          await signInWithRedirect(auth, provider);
-          return; // page will navigate away; result handled above on return
-        } catch (redirectErr: unknown) {
-          const rCode = (redirectErr as { code?: string })?.code;
-          const rMsg = (redirectErr as { message?: string })?.message;
-          setError(friendlyAuthError(rCode, rMsg));
-        }
-      } else {
-        setError(friendlyAuthError(code, message));
-      }
+      setError(friendlyAuthError(code, message));
     } finally {
-      setLoading(false);
+      if (mountedRef.current) setLoading(false);
     }
   };
-
-  const busy = loading || resolvingRedirect;
 
   return (
     <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background px-4">
@@ -180,14 +134,14 @@ export default function Login() {
 
         <Button
           onClick={handleFirebaseLogin}
-          disabled={busy}
+          disabled={loading}
           size="lg"
           className="h-11 w-full gap-2"
         >
-          {busy ? (
+          {loading ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              {resolvingRedirect ? "Checking session…" : "Signing in…"}
+              Signing in…
             </>
           ) : (
             <>
